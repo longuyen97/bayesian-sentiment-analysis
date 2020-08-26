@@ -82,27 +82,23 @@ and
 P(positive | D) = (P(positive) * product(P(Wj | positive))) / product(P(Wj))
 ```
 
-Dividing one by each other and we will obtain
-
-```
-P(negative | D) / P(positive | D) 
-= (P(positive) * product(P(Wj | positive)))  / (P(negative) * product(P(Wj | negative))) 
-= (P(positive) / P(negative)) * (product(P(Wj | positive)) / product(P(Wj | negative)))
-```
-
-By using the formula we can certainly say that a document can be classified as negative if the result of the division
-is greater than 1 else we can certainly say the document should be classified as positive. To avoid a numerical underflow from 
-many multiplications, taking the logarithm from the division certainly helps without changing the result of the 
+To avoid a numerical underflow from many multiplications, taking the logarithm each probability helps without changing the result of the 
 maximum likelihood estimator.
 
 The final formula would look like following. 
 
 ```
-ln(P(negative | D) / P(positive | D)) 
-= ln((P(positive) / P(negative))) + ln(sum(P(Wj | positive)) / sum(P(Wj | negative)))
-```
+ln(P(negative | D)) 
+= ln((P(negative) * product(P(Wj | negative))) / product(P(Wj)))
+= ln((P(negative) * product(P(Wj | negative)))) - ln(product(P(Wj))))
+= ln((P(negative) * product(P(Wj | negative)))) - ln(product(P(Wj))))
+= ln(P(negative)) + sum(ln(P(Wj | negative))) - sum(ln(P(Wj)))
 
-and the result of the model can be interpreted as: Negative if division > 0 else positive. 
+and 
+
+P(positive | D) = (P(positive) * product(P(Wj | positive))) / product(P(Wj))
+= ln(P(positive)) + sum(ln(P(Wj | positive))) - sum(ln(P(Wj)))
+```
 
 One final note for implementation details, calculating `P(Wj | Ci)` would be a simple division of how often `Wj` appears in 
 every document of `Ci` and how many words `Ci` has overall. Since the equation involves probabilities of each word of a new sentence with 

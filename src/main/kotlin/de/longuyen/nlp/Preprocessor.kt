@@ -1,5 +1,5 @@
 package de.longuyen.nlp
 
-interface Preprocessing {
+interface Preprocessor {
     fun process(input: String) : String
 }

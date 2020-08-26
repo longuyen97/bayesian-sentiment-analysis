@@ -90,6 +90,16 @@ P(negative | D) / P(positive | D)
 = (P(positive) / P(negative)) * (product(P(Wj | positive)) / product(P(Wj | negative)))
 ```
 
+By using the formula we can certainly say that a document can be classified as negative if the result of the division
+is greater than 1 else we can certainly say the document should be classified as positive. To avoid a numerical underflow from 
+many multiplications, taking the logarithm from the division certainly helps without changing the result of the 
+maximum likelihood estimator.
+
+```
+ln(P(negative | D) / P(positive | D)) 
+= ln((P(positive) / P(negative))) + ln(sum(P(Wj | positive)) / sum(P(Wj | negative)))
+```
+
 ### Preprocessing
 
 #### Dataset overview

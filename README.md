@@ -96,7 +96,7 @@ ln(P(negative | D))
 
 and 
 
-P(positive | D) = (P(positive) * product(P(Wj | positive))) / product(P(Wj))
+ln(P(positive | D)) 
 = ln(P(positive)) + sum(ln(P(Wj | positive))) - sum(ln(P(Wj)))
 ```
 

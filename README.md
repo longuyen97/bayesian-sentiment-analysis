@@ -8,11 +8,9 @@ The data for this analysis and sentiment prediction comes the Gabriel dataset wi
 The tweets themselves are un-preprocessed features and therefore not suitable for model feeding. The biggest challenge of this project is therefore implementing 
 the data pipeline for processing tweets.  
 
-![](data/birds.gif)
-
 ### Motivation
 
-Sentiment analysis is the automated process of analyzing text data and sorting it into sentiments positive, negative, or neutral. 
+Sentiment analysis is the automated process of analyzing text data and sorting it into sentiments positive, negative (or neutral). 
 
 Using sentiment analysis tools to analyze opinions on Twitter data can help companies understand how people are talking about their brand.
 

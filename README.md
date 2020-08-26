@@ -32,7 +32,7 @@ Using sentiment analysis tools to analyze opinions on Twitter data can help comp
 
 ### Basis
 
-###### Sentiment analysis overview
+#### Sentiment analysis overview
 
 Sentiment analysis (also known as opinion mining or emotion AI) refers to the use of natural language processing, text analysis, computational linguistics, 
 and biometrics to systematically identify, extract, quantify, and study affective states and subjective information. Sentiment analysis is widely applied 
@@ -45,24 +45,35 @@ Simple cases:
 - Coronet has the best lines of all day cruisers.
 - Bertram has a deep V hull and runs easily through seas.
 - Pastel-colored 1980s day cruisers from Florida are ugly.
-- I dislike old cabin cruisers
+- I dislike old cabin cruisers.
 
 More challenging examples
-- I do not dislike cabin cruisers. (Negation handling)
-- Disliking watercraft is not really my thing. (Negation, inverted word order)
-- Sometimes I really hate RIBs. (Adverbial modifies the sentiment)
-- I'd really truly love going out in this weather! (Possibly sarcastic)
-- Chris Craft is better looking than Limestone. (Two brand names, identifying the target of attitude is difficult).
-- Chris Craft is better looking than Limestone, but Limestone projects seaworthiness and reliability. (Two attitudes, two brand names).
-- The movie is surprising with plenty of unsettling plot twists. (Negative term used in a positive sense in certain domains).
-- You should see their decadent dessert menu. (Attitudinal term has shifted polarity recently in certain domains)
-- I love my mobile but would not recommend it to any of my colleagues. (Qualified positive sentiment, difficult to categorise)
-- Next week's gig will be right koide9! ("Quoi de neuf?" Fr.: "what's new?". Newly minted terms can be highly attitudinal but volatile in polarity and often out of known vocabulary.)
+- I do not dislike cabin cruisers. (Negation handling).
+- Disliking watercraft is not really my thing. (Negation, inverted word order).
+- Sometimes I really hate RIBs. (Adverbial modifies the sentiment).
+- I'd really truly love going out in this weather! (Possibly sarcastic).
 
-###### Bayesian statistics
+#### Current state of the art
 
-###### Naives Bayes for text classification
+The current state of the art including neural network models like [Bert](https://github.com/google-research/bert), [Transformers](https://github.com/huggingface/transformers)
+or [GPT-3](https://en.wikipedia.org/wiki/GPT-3) do a great work on NLP. But those models lack explainability where engineers (if at all) are rarely able to 
+tell how a model comes to it decision. 
 
-###### NLP
+Naive Bayes on the other side may produce less accurate results, but the working principle of this model is very simple. You pump the data into its memory
+and each unseen data will be classified by using prior knowledge (this is also the heart of the Bayes theorem).
 
-###### NLP techniques
+#### Naive Bayes 
+
+Objects have features and may belong to a category. The classifier will try matching objects to their categories by looking 
+at the objects' features. It does so by consulting its memory filled with knowledge gathered from training examples. This is also called 
+the conditional probability model. 
+
+Classifying a feature-set results in the highest product of 
+- the probability of that category to occur and 
+- the product of all the features' probabilities to occur in that category
+
+This is a so-called maximum a posteriori estimation.
+
+```
+classify(feature1, ..., featureN) = argmax(P(category) * PROD(P(feature|category)))
+```

@@ -95,12 +95,32 @@ is greater than 1 else we can certainly say the document should be classified as
 many multiplications, taking the logarithm from the division certainly helps without changing the result of the 
 maximum likelihood estimator.
 
+The final formula would look like following. 
+
 ```
 ln(P(negative | D) / P(positive | D)) 
 = ln((P(positive) / P(negative))) + ln(sum(P(Wj | positive)) / sum(P(Wj | negative)))
 ```
 
-### Preprocessing
+and the result of the model can be interpreted as: Negative if division > 0 else positive. 
+
+One final note for implementation details, calculating `P(Wj | Ci)` would be a simple division of how often `Wj` appears in 
+every document of `Ci` and how many words `Ci` has overall. Since the equation involves probabilities of each word of a new sentence with 
+respect to a class, if a word from the new sentence does not occur in the class within the training set, the equation becomes zero. 
+To solve this problem, we use Lidstone Smoothing or Laplace Smoothing by simple adding an additive parameter alpha. Instead of 
+
+```
+P(Wj | Ci) = (Wj frequency) / (Count of words in Ci)
+```
+
+we can do it better by 
+
+```
+P(Wj | Ci) = (Wj frequency + alpha) / (Count of words in Ci + alpha * length of D)
+```
+ 
+
+### Implementation
 
 #### Dataset overview
 

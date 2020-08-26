@@ -134,3 +134,8 @@ An overview of the dataset. Only the first and fifth column will be used for tra
 "0","1467811795","Mon Apr 06 22:20:05 PDT 2009","NO_QUERY","2Hood4Hollywood","@Tatiana_K nope they didn't have it "
 "0","1467812025","Mon Apr 06 22:20:09 PDT 2009","NO_QUERY","mimismo","@twittera que me muera ? "
 ```
+
+
+### References
+- [Naive Bayes classifier](https://en.wikipedia.org/wiki/Naive_Bayes_classifier#Probabilistic_model)
+- [Naive Bayes Classifier for Text Classification](https://medium.com/analytics-vidhya/naive-bayes-classifier-for-text-classification-556fabaf252b)

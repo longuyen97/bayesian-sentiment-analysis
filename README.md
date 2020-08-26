@@ -69,7 +69,25 @@ classify(D) = argmax((P(Ci) * P(D | Ci)) / P(D))
 Because `D` consists of `Wj` we can write
 
 `
-classify(D) = argmax((P(Ci) * product(P(Wj | Ci)) / product(P(Wj))
+classify(D) = argmax((P(Ci) * product(P(Wj | Ci))) / product(P(Wj)))
+`
+
+Consider that there are only two classes in the dataset, we can conclude 
+
+`
+P(negative | D) = (P(negative) * product(P(Wj | negative))) / product(P(Wj))
+
+and 
+
+P(positive | D) = (P(positive) * product(P(Wj | positive))) / product(P(Wj))
+`
+
+Dividing one by each other and we will obtain
+
+`
+P(negative | D) / P(positive | D) 
+= (P(positive) * product(P(Wj | positive)))  / (P(negative) * product(P(Wj | negative))) 
+= (P(positive) / P(negative)) * (product(P(Wj | positive)) / product(P(Wj | negative)))
 `
 
 ### Preprocessing

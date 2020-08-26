@@ -84,11 +84,11 @@ P(positive | D) = (P(positive) * product(P(Wj | positive))) / product(P(Wj))
 
 Dividing one by each other and we will obtain
 
-`
+```
 P(negative | D) / P(positive | D) 
 = (P(positive) * product(P(Wj | positive)))  / (P(negative) * product(P(Wj | negative))) 
 = (P(positive) / P(negative)) * (product(P(Wj | positive)) / product(P(Wj | negative)))
-`
+```
 
 ### Preprocessing
 

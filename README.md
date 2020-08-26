@@ -43,19 +43,33 @@ and each unseen data will be classified by using prior knowledge (this is also t
 
 To apply Bayes' rule to problems, here is the general equation:
 
+`
 P(A|B) = (P(A) * P(B | A)) / P(B)
+`
 
-where A is a hypothesis and B is data. P(A | B) is a conditional probability, meaning the probability that hypothesis A is true 
-given seen B data. 
+where `A` is a hypothesis and `B` is data. `P(A | B)` is a conditional probability, meaning the probability that hypothesis `A` is true 
+given seen `B` data. 
 
 #### Naive Bayes 
 
 The Bayes theorem can be used in general form applied on text documents. Assuming a corpus of text documents can be used for training 
-the model where each document `D` consists of words `Wi`. Each of the document will be labeled to belong to a class `Ci`. We 
-are interested in classifying an unseen text document, i.e assigning it to a class of `C`.
+the model where each document `D` consists of words `Wj`. Each of the document will be labeled to belong to a class `Ci`. We 
+are interested in classifying an unseen text document, i.e assigning it to a class of `C` using maximum a posteriori estimation.
 
 `
 classify(D) = argmax(P(Ci | D))
+`
+
+By definition, we can write
+
+`
+classify(D) = argmax((P(Ci) * P(D | Ci)) / P(D))
+`
+
+Because `D` consists of `Wj` we can write
+
+`
+classify(D) = argmax((P(Ci) * product(P(Wj | Ci)) / product(P(Wj))
 `
 
 ### Preprocessing

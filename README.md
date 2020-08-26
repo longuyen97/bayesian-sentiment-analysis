@@ -43,7 +43,10 @@ and each unseen data will be classified by using prior knowledge (this is also t
 
 To apply Bayes' rule to problems, here is the general equation:
 
-![formula](https://render.githubusercontent.com/render/math?math=P(A|B) = \frac{P(A) \time P(B | A))}_{P(B)})
+P(A|B) = (P(A) * P(B | A)) / P(B)
+
+where A is a hypothesis and B is data. P(A | B) is a conditional probability, meaning the probability that hypothesis A is true 
+given seen B data. 
 
 #### Naive Bayes 
 

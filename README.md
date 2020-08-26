@@ -50,19 +50,13 @@ given seen B data.
 
 #### Naive Bayes 
 
-Objects have features and may belong to a category. The classifier will try matching objects to their categories by looking 
-at the objects' features. It does so by consulting its memory filled with knowledge gathered from training examples. This is also called 
-the conditional probability model. 
+The Bayes theorem can be used in general form applied on text documents. Assuming a corpus of text documents can be used for training 
+the model where each document `D` consists of words `Wi`. Each of the document will be labeled to belong to a class `Ci`. We 
+are interested in classifying an unseen text document, i.e assigning it to a class of `C`.
 
-Classifying a feature-set results in the highest product of 
-- the probability of that category to occur and 
-- the product of all the features' probabilities to occur in that category
-
-This is a so-called maximum a posteriori estimation.
-
-```
-classify(feature1, ..., featureN) = argmax(P(category) * PROD(P(feature|category)))
-```
+`
+classify(D) = argmax(P(Ci | D))
+`
 
 ### Preprocessing
 

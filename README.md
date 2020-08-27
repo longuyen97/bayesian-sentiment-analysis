@@ -38,9 +38,9 @@ and each unseen data will be classified by using prior knowledge (this is also t
 
 #### About Kotlin
 
-This project was implemented with Kotlin, a language which combines the best from Python and Java, utilize the best features from the JVM world and the prototyping world.
+This project was implemented with Kotlin, a language which combines the best from Python, JavaScript and Java, utilize the best features from each language and result the almost-perfect language. At the moment I am really having fun creating stuff in KotLin and hope for more dominance coming from this language.
 
-### Result
+### Result of the implementation
 
 #### Naive Bayes on unprocessed data.
 - Training: 0.84 Accuracy

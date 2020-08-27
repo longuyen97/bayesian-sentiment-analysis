@@ -3,16 +3,41 @@
 A NLP project on analyzing twitter users' sentiment, predicting solely through user's tweet content the sentiment of 
 the target person.
 
-The data for this analysis and sentiment prediction comes the Gabriel dataset with 1.6 million tweets .This dataset has target feature - sentiment as 0 & 4 (0 - Negative , 4 - Positive). 
+The data for this analysis and sentiment prediction comes the Gabriel dataset with 1.6 million tweets .This dataset has target feature with 0 as Negative and 4 as Positive. 
 
 The tweets themselves are un-preprocessed features and therefore not suitable for model feeding. The biggest challenge of this project is therefore implementing 
 the data pipeline for processing tweets.  
 
 ### Result
 
+Since the algorithm is stochastic, the result may vary. Following settings:
+- Lower case text
+- Naive white space tokenizer
+- 1-Gram model
+- 75% training data, 25% testing data
+
+Improvement suggestion:
+- Using a better tokenizer like [Lucene Analyzer](https://www.baeldung.com/lucene-analyzers)
+
 #### Unprocessed data
 - Training: 0.84 Accuracy
 - Testing: 0.76 Accuracy
+
+#### All lower case
+- Training: 0.85 Accuracy
+- Testing: 0.77 Accuracy
+
+#### Word Lemma
+- Training: 0.89 Accuracy
+- Testing: 0.82 Accuracy
+
+#### Random Forrest (3 trees)
+- Training: 0.81 Accuracy
+- Testing: 0.78 Accuracy
+
+#### Random Forrest (25 trees)
+- Training: 0.77 Accuracy
+- Testing: 0.77 Accuracy
 
 ### Motivation
 

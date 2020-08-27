@@ -19,7 +19,7 @@ class TestNaiveBayesClassifier{
                 0,
                 0
         )
-        c.initialize(d, t)
+        c.learn(d, t)
         assertEquals(c.tCount[0], 2)
         assertEquals(c.tCount[1], 2)
 

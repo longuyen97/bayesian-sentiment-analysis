@@ -32,7 +32,7 @@ open class NaiveBayesClassifier<F, T>(private val alpha: Double = 0.9) : Bayesia
         counts["dSum"] = 0L
     }
 
-    override fun initialize(documents: Array<Array<F>>, targets: Array<T>) {
+    override fun learn(documents: Array<Array<F>>, targets: Array<T>) {
         if (documents.size != targets.size) {
             throw IllegalArgumentException("Size of features ${documents.size} is not the same of targets ${targets.size}")
         } else {

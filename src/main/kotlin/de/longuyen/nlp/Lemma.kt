@@ -18,7 +18,7 @@ class Lemma : Preprocessor {
 
     override fun process(input: String): String {
         val lemmas: MutableList<String> = mutableListOf()
-        val document: Annotation = Annotation(input)
+        val document = Annotation(input)
         pipeline.annotate(document)
         val sentences: List<CoreMap> = document.get(SentencesAnnotation::class.java)
         for (sentence in sentences) {

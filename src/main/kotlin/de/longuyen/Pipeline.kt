@@ -16,8 +16,7 @@ class Pipeline(private val bayesianClassifier: BayesianClassifier<String, Int>) 
 
     private val io = IO()
     private val preprocessors = mutableListOf(
-            LowerCase(),
-            Lemma()
+            LowerCase()
     )
     private val ngram = NGram(1)
     private val metric = Accuracy<Int>()
@@ -73,7 +72,7 @@ class Pipeline(private val bayesianClassifier: BayesianClassifier<String, Int>) 
         println("Finishing splitting data. Training data has ${X.size} items. Testing data has ${x.size} items")
 
         start = System.currentTimeMillis()
-        bayesianClassifier.initialize(X.toTypedArray(), Y.toTypedArray())
+        bayesianClassifier.learn(X.toTypedArray(), Y.toTypedArray())
         println("Training model took ${System.currentTimeMillis() - start}ms")
 
         start = System.currentTimeMillis()

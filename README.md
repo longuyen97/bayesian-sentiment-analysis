@@ -5,11 +5,12 @@ This is a natural language processing project with the goal to analyze Twitter u
 The tweets themselves are un-preprocessed features and are therefore not suitable for producing "state of the arts" results with 99% accuracy. The challenge of this project is to implement a correctly working Naive Bayes for any kind of data and arbitrary many distinct labels, i.e. generic library for data mining.  
 
 Since the algorithm is stochastic, the result may vary. Following settings are used:
-- Naive white space tokenizer (The model's performance can be much better with a sophisticated tokenizer like one of Lucene)
+- Naive white space tokenizer (The model's performance can be much better with a sophisticated tokenizer like one of Lucene).
 - Lower case text. So weird capitalization of users won't play a major role.
 - 1-Gram model. From `"I like Tesla"` we will get `["I", "like", "Tesla"]`. A 1-Gram model will for example result the feature vector `["I_like", "like_Tesla"]`.
-- Remove english stop words. Words like "I", "that", "he", "she" do not provide very much entropy and can be safely removed.
+- Remove english stop words. Words like `"I", "that", "he", "she"` do not provide very much entropy and can be safely removed.
 - 75% training data, 25% testing data. All data splits are balanced, that means the amount of positive tweets is the same as the amount of negative tweets. 
+- Lemmatization with [NLP Stanford](https://nlp.stanford.edu/) yields a very long processing time but a promising result. Since the lemmatization only takes very much time in training time, the model's performance would still be fast in production.
 
 Improvement suggestion:
 - Using a better tokenizer like [Lucene Analyzer](https://www.baeldung.com/lucene-analyzers).
@@ -28,8 +29,9 @@ A typical tweet could look like following:
 In this case, the tweet could be seen as very dirty. The username `@switchfoot`, the hyperlink to the image of the tweet and the grammar of the tweet makes a model very difficult to learn from the data. Splitting the tweet with a naive tokenizer will result the following feature vector
 
 `
-["@switchfoot", "http://twitpic.com/2y1zl", "-", "Awww,", "that's", "a", "bummer".  You shoulda got David Carr of Third Day to do it. ;D]
+["@switchfoot", "http://twitpic.com/2y1zl", "-", "Awww,", "that's", "a", "bummer.", "You", "shoulda", "got", "David", "Carr", "of", "Third", "Day", "to", "do", "it.", ";D"]
 `
+Applying the Bayes Theorem on the data will result a pragmatic sentiment analysis model with a pretty high accuracy and very high explainability, which could be a deal breaker when using models like [Bert](https://github.com/google-research/bert), [Transformers](https://github.com/huggingface/transformers) or [GPT-3](https://en.wikipedia.org/wiki/GPT-3).
 
 ### Result
 

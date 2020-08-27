@@ -2,12 +2,12 @@
 
 This is a natural language processing project with the goal to analyze Twitter users' sentiment, predicting solely through user's tweet content the sentiment of the target person. The data for this analysis and sentiment prediction comes the Gabriel dataset with 1.6 million labeled tweets. 
 
-The tweets themselves are un-preprocessed features and are therefore not suitable for producing "state of the arts" results with 99% accuracy. The challenge of this project is to implement a correctly working Naive Bayes for any kind of data and arbitrary many distinct labels, i.e. generic library for data mining.  
+The data themselves are raw un-preprocessed Tweets and are therefore not suitable for producing "state of the arts" results with 99% accuracy. The challenge of this project is to implement a correctly working Naive Bayes for any kind of data and arbitrary many distinct labels, i.e. generic library for data mining.  
 
-Since the algorithm is stochastic, the result may vary. Following settings are used:
+Since the algorithm is stochastic, the result may vary. Following settings were tested and used on processing data:
 - Naive white space tokenizer (The model's performance can be much better with a sophisticated tokenizer like one of Lucene).
 - Lower case text. So weird capitalization of users won't play a major role.
-- 1-Gram model. From `"I like Tesla"` we will get `["I", "like", "Tesla"]`. A 1-Gram model will for example result the feature vector `["I_like", "like_Tesla"]`.
+- 1-Gram model. From `"I like Tesla"` we will get `["I", "like", "Tesla"]`. A 2-Gram model will for example result the feature vector `["I_like", "like_Tesla"]`.
 - Remove english stop words. Words like `"I", "that", "he", "she"` do not provide very much entropy and can be safely removed.
 - 75% training data, 25% testing data. All data splits are balanced, that means the amount of positive tweets is the same as the amount of negative tweets. 
 - Lemmatization with [NLP Stanford](https://nlp.stanford.edu/) yields a very long processing time but a promising result. Since the lemmatization only takes very much time in training time, the model's performance would still be fast in production.
@@ -33,6 +33,13 @@ In this case, the tweet could be seen as very dirty. The username `@switchfoot`,
 `
 Applying the Bayes Theorem on the data will result a pragmatic sentiment analysis model with a pretty high accuracy and very high explainability, which could be a deal breaker when using models like [Bert](https://github.com/google-research/bert), [Transformers](https://github.com/huggingface/transformers) or [GPT-3](https://en.wikipedia.org/wiki/GPT-3).
 
+Naive Bayes on the other side may produce less accurate results, but the working principle of this model is very simple. You pump the data into its memory
+and each unseen data will be classified by using prior knowledge (this is also the heart of the Bayes theorem). 
+
+#### About Kotlin
+
+This project was implemented with Kotlin, a language which combines the best from Python and Java, utilize the best features from the JVM world and the prototyping world.
+
 ### Result
 
 #### Naive Bayes on unprocessed data.
@@ -50,16 +57,6 @@ Applying the Bayes Theorem on the data will result a pragmatic sentiment analysi
 #### Random Forrest (3 trees). Combining wisdom of the crowd with Naive Bayes. The major vote out of three models will be the final prediction. The three models themselves were trained with different data.
 - Training: 0.81 Accuracy
 - Testing: 0.78 Accuracy
-
-
-### Current state of the art
-
-The current state of the art including neural network models like [Bert](https://github.com/google-research/bert), [Transformers](https://github.com/huggingface/transformers)
-or [GPT-3](https://en.wikipedia.org/wiki/GPT-3) do a great work on NLP. However, those models lack expandability, where engineers (if at all) are rarely able to 
-tell how a model comes to it decision. 
-
-Naive Bayes on the other side may produce less accurate results, but the working principle of this model is very simple. You pump the data into its memory
-and each unseen data will be classified by using prior knowledge (this is also the heart of the Bayes theorem).
 
 ### Bayes theorem
 

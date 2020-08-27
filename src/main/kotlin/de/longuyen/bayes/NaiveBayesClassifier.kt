@@ -3,107 +3,117 @@ package de.longuyen.bayes
 import java.lang.IllegalArgumentException
 import kotlin.math.ln
 
-class NaiveBayesClassifier<F, T>(private val alpha: Double) : BayesianClassifier<F, T> {
-    // How often does a label occurs
-    private val labelsCount = HashMap<T, Int>()
+class NaiveBayesClassifier<F, T>(private val alpha: Double = 0.5) : BayesianClassifier<F, T> {
+    // How often does a target occurs
+    val tCount = HashMap<T, Int>()
 
-    // How often does a feature occurs in each label
-    private val featuresInLabelsCount = HashMap<T, HashMap<F, Int>>()
+    // How often a feature appears
+    val fCount = HashMap<F, Int>()
 
-    // How many words does a label has
-    private val wordsCountInEachLabel = HashMap<T, Int>()
+    // How often does a feature occurs in each target
+    val fTCount = HashMap<T, HashMap<F, Int>>()
 
-    // How often a word appears
-    private val wordsCount = HashMap<F, Int>()
+    // How many features does a class has
+    val tFCount = HashMap<T, Int>()
 
     // How many documents there are
-    private var documentSum = 0L
+    var dSum = 0L
 
-    // How many words
-    private var wordSum = 0L
+    // How many features
+    var fSum = 0L
 
-    override fun initialize(documents: Array<Array<F>>, labels: Array<T>) {
-        if (documents.size != labels.size) {
-            throw IllegalArgumentException("Size of features ${documents.size} is not the same of targets ${labels.size}")
+    override fun initialize(documents: Array<Array<F>>, targets: Array<T>) {
+        if (documents.size != targets.size) {
+            throw IllegalArgumentException("Size of features ${documents.size} is not the same of targets ${targets.size}")
         } else {
             this.clear(documents)
-            for (label in labels) {
-                if (labelsCount.containsKey(label)) {
-                    labelsCount[label] = labelsCount[label]!! + 1
+            for (target in targets) {
+                // Increment count of a target
+                if (tCount.containsKey(target)) {
+                    tCount[target] = tCount[target]!! + 1
                 } else {
-                    labelsCount[label] = 1
+                    tCount[target] = 1
                 }
-                if (!featuresInLabelsCount.containsKey(label)) {
-                    featuresInLabelsCount[label] = HashMap()
+
+                // Map for feature count in a target
+                if (!fTCount.containsKey(target)) {
+                    fTCount[target] = HashMap()
                 }
-                if (!wordsCountInEachLabel.containsKey(label)) {
-                    wordsCountInEachLabel[label] = 0
+
+                // Count of how many features does a target have
+                if (!tFCount.containsKey(target)) {
+                    tFCount[target] = 0
                 }
             }
 
-            if (labelsCount.size != 2) {
-                throw IllegalArgumentException("This classifier only accept binary data with two targets.")
-            }
-
-            for (i in documents.indices) {
-                val document: Array<F> = documents[i]
-                val label: T = labels[i]
-                val featuresInThisLabelCount: HashMap<F, Int> = featuresInLabelsCount[label]!!
+            for (idx in documents.indices) {
+                val document: Array<F> = documents[idx]
+                val label: T = targets[idx]
+                val fTC: HashMap<F, Int> = fTCount[label]!!
                 for (wj: F in document) {
-                    if (featuresInThisLabelCount.containsKey(wj)) {
-                        featuresInThisLabelCount[wj] = featuresInThisLabelCount[wj]!! + 1
+
+                    // Count how often a feature appears in a target
+                    if (fTC.containsKey(wj)) {
+                        fTC[wj] = fTC[wj]!! + 1
                     } else {
-                        featuresInThisLabelCount[wj] = 1
+                        fTC[wj] = 1
                     }
-                    wordsCountInEachLabel[label] = wordsCountInEachLabel[label]!! + 1
-                    if (wordsCount.containsKey(wj)) {
-                        wordsCount[wj] = wordsCount[wj]!! + 1
+
+                    // How how often a feature appears generally
+                    if (fCount.containsKey(wj)) {
+                        fCount[wj] = fCount[wj]!! + 1
                     } else {
-                        wordsCount[wj] = 0
+                        fCount[wj] = 1
                     }
-                    wordSum += 1L
+
+                    // Count how many features a target have generally
+                    tFCount[label] = tFCount[label]!! + 1
+
+                    // How how many features there are generally
+                    fSum += 1L
                 }
             }
         }
     }
 
     override fun predict(document: Array<F>): T {
-        val labels = labelsCount.keys.toList()
-        val reversedProbabilities = mutableListOf<Double>()
-        for (label in labels) {
-            val labelProb = labelsCount[label]!!.toDouble() / documentSum.toDouble()
+        val targets = tCount.keys.toList()
+        val p = mutableListOf<Double>()
+
+        for (t in targets) {
+            val pT = ln((tCount.getOrDefault(t, 0).toDouble() + alpha) / dSum.toDouble())
 
             var sumWjCi = 0.0
             for (wj in document) {
-                val wjCi = (featuresInLabelsCount[label]!!.getOrDefault(wj, 0).toDouble() + alpha) / (wordsCountInEachLabel[label]!!.toDouble() + alpha * document.size.toDouble())
+                val wjCi = (fTCount[t]!!.getOrDefault(wj, 0).toDouble() + alpha) / (tFCount.getOrDefault(t, 0) + alpha * document.size.toDouble())
                 sumWjCi += ln(wjCi)
             }
 
             var sumWj = 0.0
             for(wj in document){
-                sumWj += ln(wordsCount.getOrDefault(wj, 0).toDouble() / wordSum)
+                sumWj += ln(fCount.getOrDefault(wj, alpha).toDouble() / fSum)
             }
 
-            reversedProbabilities.add(labelProb + sumWjCi - sumWj)
+            p.add(pT + sumWjCi - sumWj)
         }
 
-        var max = reversedProbabilities.first()
+        var pMax = p.first()
         var argMax = 0
-        for(i in reversedProbabilities.indices){
-            if(reversedProbabilities[i] > max){
-                max = reversedProbabilities[i]
+        for(i in p.indices){
+            if(p[i] > pMax){
+                pMax = p[i]
                 argMax = i
             }
         }
-        return labels[argMax]
+        return targets[argMax]
     }
 
     private fun clear(documents: Array<Array<F>>) {
-        documentSum = documents.size.toLong()
-        wordSum = 0L
-        featuresInLabelsCount.clear()
-        labelsCount.clear()
-        wordsCount.clear()
-        wordsCountInEachLabel.clear()
+        dSum = documents.size.toLong()
+        fSum = 0L
+        fTCount.clear()
+        tCount.clear()
+        fCount.clear()
+        tFCount.clear()
     }
 }

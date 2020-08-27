@@ -106,13 +106,13 @@ respect to a class, if a word from the new sentence does not occur in the class 
 To solve this problem, we use Lidstone Smoothing or Laplace Smoothing by simple adding an additive parameter alpha. Instead of 
 
 ```
-P(Wj | Ci) = (Wj frequency) / (Count of words in Ci)
+P(Wj | Ci) = (Wj count in Ci) / (Count of words in Ci)
 ```
 
 we can do it better by 
 
 ```
-P(Wj | Ci) = (Wj frequency + alpha) / (Count of words in Ci + alpha * length of D)
+P(Wj | Ci) = (Wj count in Ci + alpha) / (Count of words in Ci + alpha * length of D)
 ```
  
 

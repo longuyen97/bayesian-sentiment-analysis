@@ -1,49 +1,40 @@
 # Bayesian sentiment analysis
 
-A NLP project on analyzing twitter users' sentiment, predicting solely through user's tweet content the sentiment of 
-the target person.
+This is a natural language processing project with the goal to analyze Twitter users' sentiment, predicting solely through user's tweet content the sentiment of the target person. The data for this analysis and sentiment prediction comes the Gabriel dataset with 1.6 million labeled tweets. 
 
-The data for this analysis and sentiment prediction comes the Gabriel dataset with 1.6 million tweets .This dataset has target feature with 0 as Negative and 4 as Positive. 
-
-The tweets themselves are un-preprocessed features and therefore not suitable for model feeding. The biggest challenge of this project is therefore implementing 
-the data pipeline for processing tweets.  
+The tweets themselves are un-preprocessed features and are therefore not suitable for producing "state of the arts" results with 99% accuracy. The challenge of this project is to implement a correctly working Naive Bayes for any kind of data and arbitrary many distinct labels, i.e. generic library for data mining.  
 
 ### Result
 
-Since the algorithm is stochastic, the result may vary. Following settings:
+Since the algorithm is stochastic, the result may vary. Following settings are used:
+- Naive white space tokenizer (The model's performance can be much better with a sophisticated tokenizer like one of Lucene)
 - Lower case text
-- Naive white space tokenizer
 - 1-Gram model
 - 75% training data, 25% testing data
 
 Improvement suggestion:
-- Using a better tokenizer like [Lucene Analyzer](https://www.baeldung.com/lucene-analyzers)
+- Using a better tokenizer like [Lucene Analyzer](https://www.baeldung.com/lucene-analyzers).
+- Incorperate [Term frequency–inverse document frequency](https://en.wikipedia.org/wiki/Tf%E2%80%93idf) to weight each token importance.
 
-#### Unprocessed data
+#### Naive Bayes on unprocessed data.
 - Training: 0.84 Accuracy
 - Testing: 0.76 Accuracy
 
-#### All lower case
+#### Naive Bayes on all lower case. Terms like "Love" or "love" would therefore be the same.
 - Training: 0.85 Accuracy
 - Testing: 0.77 Accuracy
 
-#### Word Lemma
+#### Word Lemma. Terms like "Love", "Like", "Hate", "Dislike" would therefore be the same.
 - Training: 0.89 Accuracy
 - Testing: 0.82 Accuracy
 
-#### Random Forrest (3 trees)
+#### Random Forrest (3 trees). Combining wisdom of the crowd with Naive Bayes. The major vote out of three models will be the final prediction. The three models themselves were trained with different data.
 - Training: 0.81 Accuracy
 - Testing: 0.78 Accuracy
 
-#### Random Forrest (25 trees)
-- Training: 0.77 Accuracy
-- Testing: 0.77 Accuracy
-
 ### Motivation
 
-Sentiment analysis is the automated process of analyzing text data and sorting it into sentiments positive, negative (or neutral). 
-
-Using sentiment analysis tools to analyze opinions on Twitter data can help companies understand how people are talking about their brand.
+Sentiment analysis is the automated process of analyzing text data and sorting it into sentiments positive, negative (or neutral). Using sentiment analysis tools to analyze opinions on Twitter data can help companies understand how people are talking about their brand.
 
 The objective and challenges of sentiment analysis can be shown through some simple examples.
 

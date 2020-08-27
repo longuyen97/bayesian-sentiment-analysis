@@ -7,7 +7,7 @@ import java.util.stream.IntStream
 import kotlin.math.ln
 import java.io.Serializable
 
-open class NaiveBayesClassifier<F, T>(private val alpha: Double = 0.5) : BayesianClassifier<F, T> , Serializable {
+open class NaiveBayesClassifier<F, T>(private val alpha: Double = 0.9) : BayesianClassifier<F, T> , Serializable {
     companion object {
         private const val serialVersionUID: Long = -4270053884763734247
     }

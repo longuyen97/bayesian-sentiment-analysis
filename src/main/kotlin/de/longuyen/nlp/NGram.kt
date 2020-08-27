@@ -3,7 +3,7 @@ package de.longuyen.nlp
 import java.io.Serializable
 import java.lang.RuntimeException
 
-class NGram(private val n: Int, private val delimiter: String = " ", private val join: String = "_") : Serializable{
+class NGram(val n: Int, val delimiter: String = " ", private val join: String = "_") : Serializable{
     companion object {
         private const val serialVersionUID: Long = -4270053884763734247
     }
@@ -18,7 +18,7 @@ class NGram(private val n: Int, private val delimiter: String = " ", private val
         val ret = mutableListOf<String>()
         val tokens = input.split(delimiter)
         if(tokens.size < n){
-            throw RuntimeException("Can not tokenize the input. Length of the input ${tokens.size} is smaller than the used NGram ${this.n}")
+            throw RuntimeException("Can not tokenize the input. Length of the input ${tokens.size} is smaller than the used NGram ${this.n}: $input")
         }
         for(i in tokens.indices){
             if(i + n <= tokens.size) {

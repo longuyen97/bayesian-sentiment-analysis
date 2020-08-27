@@ -2,9 +2,12 @@ package de.longuyen
 
 import de.longuyen.bayes.BayesianClassifier
 import de.longuyen.nlp.*
-import java.io.*
+import java.io.FileOutputStream
+import java.io.ObjectOutputStream
+import java.io.Serializable
 import java.util.*
 import java.util.stream.IntStream
+
 
 class Pipeline(private val bayesianClassifier: BayesianClassifier<String, Int>) : Serializable {
     companion object {
@@ -14,11 +17,7 @@ class Pipeline(private val bayesianClassifier: BayesianClassifier<String, Int>) 
     private val io = IO()
     private val preprocessors = mutableListOf(
             LowerCase(),
-            RemoveHashtag(),
-            RemoveSpecialCharacter(),
-            RemoveMention(),
-            RemoveLink(),
-            RemoveStopWords()
+            Lemma()
     )
     private val ngram = NGram(1)
     private val metric = Accuracy<Int>()
@@ -27,7 +26,7 @@ class Pipeline(private val bayesianClassifier: BayesianClassifier<String, Int>) 
         var start = System.currentTimeMillis()
         val input = io.read()
         val features: MutableList<String> = input.first.toMutableList()
-        val targets: Array<Int> = input.second
+        val targets: MutableList<Int> = input.second.toMutableList()
         println("Reading data took ${System.currentTimeMillis() - start}ms")
 
         start = System.currentTimeMillis()
@@ -39,9 +38,20 @@ class Pipeline(private val bayesianClassifier: BayesianClassifier<String, Int>) 
         println("Preprocessing data took ${System.currentTimeMillis() - start}ms")
 
         start = System.currentTimeMillis()
-        val nGramFeatures = Array(features.size){ arrayOf<String>()}
-        IntStream.range(0, features.size).parallel().forEach {
-            nGramFeatures[it] = ngram.analyze(features[it])
+        val xFiltered = mutableListOf<String>()
+        val yFiltered= mutableListOf<Int>()
+        IntStream.range(0, features.size).forEach {
+            if(features[it].trim().split(this.ngram.delimiter).size >=  this.ngram.n){
+                xFiltered.add(features[it])
+                yFiltered.add(targets[it])
+            }
+        }
+        println("Filtering data took ${System.currentTimeMillis() - start}ms")
+
+        start = System.currentTimeMillis()
+        val nGramFeatures = Array(xFiltered.size){ arrayOf<String>()}
+        IntStream.range(0, xFiltered.size).parallel().forEach {
+            nGramFeatures[it] = ngram.analyze(xFiltered[it])
         }
         println("Transforming data into NGram took ${System.currentTimeMillis() - start}ms")
 
@@ -54,10 +64,10 @@ class Pipeline(private val bayesianClassifier: BayesianClassifier<String, Int>) 
         for(i in nGramFeatures.indices){
             if(random.nextInt(100) < trainSize){
                 X.add(nGramFeatures[i])
-                Y.add(targets[i])
+                Y.add(yFiltered[i])
             }else{
                 x.add(nGramFeatures[i])
-                y.add(targets[i])
+                y.add(yFiltered[i])
             }
         }
         println("Finishing splitting data. Training data has ${X.size} items. Testing data has ${x.size} items")

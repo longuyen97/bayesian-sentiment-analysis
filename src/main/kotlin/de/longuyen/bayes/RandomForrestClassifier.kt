@@ -5,7 +5,7 @@ class RandomForrestClassifier<F, T>(private val count: Int = 5) : BayesianClassi
 
     init {
         for(i in 0 until count){
-
+            forrest.add(NaiveBayesClassifier())
         }
     }
 

@@ -4,16 +4,12 @@ class RemoveSpecialCharacter : Preprocessor {
     private val characters = mutableListOf(
             ",",
             ".",
-            "!",
             "?",
-            ":",
-            "/",
             "\"",
             "'",
             "+",
             "-",
             "*",
-            ":"
     )
     override fun process(input: String): String {
         var processed = input

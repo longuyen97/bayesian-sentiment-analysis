@@ -1,20 +1,28 @@
 package de.longuyen.bayes
 
 import java.lang.IllegalArgumentException
+import java.util.*
+import java.util.concurrent.ConcurrentHashMap
+import java.util.stream.IntStream
 import kotlin.math.ln
+import java.io.Serializable
 
-class NaiveBayesClassifier<F, T>(private val alpha: Double = 0.5) : BayesianClassifier<F, T> {
+class NaiveBayesClassifier<F, T>(private val alpha: Double = 0.5) : BayesianClassifier<F, T> , Serializable {
+    companion object {
+        private const val serialVersionUID: Long = -4270053884763734247
+    }
+
     // How often does a target occurs
-    val tCount = HashMap<T, Int>()
+    val tCount = ConcurrentHashMap<T, Int>()
 
     // How often a feature appears
-    val fCount = HashMap<F, Int>()
+    val fCount = ConcurrentHashMap<F, Int>()
 
     // How often does a feature occurs in each target
-    val fTCount = HashMap<T, HashMap<F, Int>>()
+    val fTCount = ConcurrentHashMap<T, ConcurrentHashMap<F, Int>>()
 
     // How many features does a class has
-    val tFCount = HashMap<T, Int>()
+    val tFCount = ConcurrentHashMap<T, Int>()
 
     // How many documents there are
     var dSum = 0L
@@ -27,7 +35,7 @@ class NaiveBayesClassifier<F, T>(private val alpha: Double = 0.5) : BayesianClas
             throw IllegalArgumentException("Size of features ${documents.size} is not the same of targets ${targets.size}")
         } else {
             this.clear(documents)
-            for (target in targets) {
+            Arrays.stream(targets).parallel().forEach { target ->
                 // Increment count of a target
                 if (tCount.containsKey(target)) {
                     tCount[target] = tCount[target]!! + 1
@@ -37,7 +45,7 @@ class NaiveBayesClassifier<F, T>(private val alpha: Double = 0.5) : BayesianClas
 
                 // Map for feature count in a target
                 if (!fTCount.containsKey(target)) {
-                    fTCount[target] = HashMap()
+                    fTCount[target] = ConcurrentHashMap()
                 }
 
                 // Count of how many features does a target have
@@ -46,10 +54,10 @@ class NaiveBayesClassifier<F, T>(private val alpha: Double = 0.5) : BayesianClas
                 }
             }
 
-            for (idx in documents.indices) {
+            IntStream.range(0, documents.size).parallel().forEach { idx ->
                 val document: Array<F> = documents[idx]
                 val label: T = targets[idx]
-                val fTC: HashMap<F, Int> = fTCount[label]!!
+                val fTC: ConcurrentHashMap<F, Int> = fTCount[label]!!
                 for (wj: F in document) {
 
                     // Count how often a feature appears in a target
@@ -76,6 +84,22 @@ class NaiveBayesClassifier<F, T>(private val alpha: Double = 0.5) : BayesianClas
         }
     }
 
+
+    override fun predict(documents: Array<Array<F>>): List<T> {
+        val ret = mutableListOf<T>()
+
+        IntStream.range(0, documents.size)
+                .forEach {
+                    ret.add(tFCount.keys.first())
+                }
+        IntStream.range(0, documents.size)
+                .parallel()
+                .forEach {
+                    ret[it] = predict(documents[it])
+                }
+        return ret
+    }
+
     override fun predict(document: Array<F>): T {
         val targets = tCount.keys.toList()
         val p = mutableListOf<Double>()
@@ -90,7 +114,7 @@ class NaiveBayesClassifier<F, T>(private val alpha: Double = 0.5) : BayesianClas
             }
 
             var sumWj = 0.0
-            for(wj in document){
+            for (wj in document) {
                 sumWj += ln(fCount.getOrDefault(wj, alpha).toDouble() / fSum)
             }
 
@@ -99,8 +123,8 @@ class NaiveBayesClassifier<F, T>(private val alpha: Double = 0.5) : BayesianClas
 
         var pMax = p.first()
         var argMax = 0
-        for(i in p.indices){
-            if(p[i] > pMax){
+        for (i in p.indices) {
+            if (p[i] > pMax) {
                 pMax = p[i]
                 argMax = i
             }

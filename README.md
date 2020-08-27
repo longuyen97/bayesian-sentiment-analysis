@@ -8,6 +8,20 @@ The data for this analysis and sentiment prediction comes the Gabriel dataset wi
 The tweets themselves are un-preprocessed features and therefore not suitable for model feeding. The biggest challenge of this project is therefore implementing 
 the data pipeline for processing tweets.  
 
+### Current result
+
+```
+Cache of data found. Read cache.
+Reading data took 4014ms
+Preprocessing data took 0ms
+Transforming data into NGram took 1260ms
+Training model took 6506ms
+Prediction train took 945ms
+Evaluating training prediction took 21ms. Accuracy 0.7837670683668213
+Prediction test took 460ms
+Evaluating testing prediction took 7ms. Accuracy 0.6393748157475279
+```
+
 ### Motivation
 
 Sentiment analysis is the automated process of analyzing text data and sorting it into sentiments positive, negative (or neutral). 

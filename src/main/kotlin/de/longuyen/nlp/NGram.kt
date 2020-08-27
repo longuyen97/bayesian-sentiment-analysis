@@ -4,6 +4,10 @@ import java.io.Serializable
 import java.lang.RuntimeException
 
 class NGram(private val n: Int, private val delimiter: String = " ", private val join: String = "_") : Serializable{
+    companion object {
+        private const val serialVersionUID: Long = -4270053884763734247
+    }
+
     init {
         if(n < 1){
             throw RuntimeException("N-Gram with n < 1. Bad. Try a number >= 1")

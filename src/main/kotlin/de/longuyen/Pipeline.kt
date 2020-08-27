@@ -1,11 +1,8 @@
 package de.longuyen
 
 import de.longuyen.bayes.BayesianClassifier
-import de.longuyen.nlp.Accuracy
-import de.longuyen.nlp.IO
-import de.longuyen.nlp.NGram
-import de.longuyen.nlp.Preprocessor
-import java.io.Serializable
+import de.longuyen.nlp.*
+import java.io.*
 import java.util.*
 import java.util.stream.IntStream
 
@@ -15,7 +12,11 @@ class Pipeline(private val bayesianClassifier: BayesianClassifier<String, Int>) 
     }
 
     private val io = IO()
-    private val preprocessors = mutableListOf<Preprocessor>()
+    private val preprocessors = mutableListOf(
+            LowerCase(),
+            RemoveSpecialCharacter(),
+            RemoveStopWords()
+    )
     private val ngram = NGram(1)
     private val metric = Accuracy<Int>()
 
@@ -39,17 +40,16 @@ class Pipeline(private val bayesianClassifier: BayesianClassifier<String, Int>) 
         IntStream.range(0, features.size).parallel().forEach {
             nGramFeatures[it] = ngram.analyze(features[it])
         }
-        features.clear()
         println("Transforming data into NGram took ${System.currentTimeMillis() - start}ms")
 
-        val trainSize = 0.75
+        val trainSize = 75
         val X = mutableListOf<Array<String>>()
         val Y = mutableListOf<Int>()
         val x = mutableListOf<Array<String>>()
         val y = mutableListOf<Int>()
-        val random = Random()
+        val random = Random(42)
         for(i in nGramFeatures.indices){
-            if(random.nextDouble() < trainSize){
+            if(random.nextInt(100) < trainSize){
                 X.add(nGramFeatures[i])
                 Y.add(targets[i])
             }else{
@@ -57,11 +57,11 @@ class Pipeline(private val bayesianClassifier: BayesianClassifier<String, Int>) 
                 y.add(targets[i])
             }
         }
+        println("Finishing splitting data. Training data has ${X.size} items. Testing data has ${x.size} items")
 
         start = System.currentTimeMillis()
         bayesianClassifier.initialize(X.toTypedArray(), Y.toTypedArray())
         println("Training model took ${System.currentTimeMillis() - start}ms")
-
 
         start = System.currentTimeMillis()
         val predictionTrain = bayesianClassifier.predict(X.toTypedArray())
@@ -78,14 +78,11 @@ class Pipeline(private val bayesianClassifier: BayesianClassifier<String, Int>) 
         start = System.currentTimeMillis()
         val metricTest = metric.compute(y.toTypedArray(), predictionTest.toTypedArray())
         println("Evaluating testing prediction took ${System.currentTimeMillis() - start}ms. Accuracy $metricTest")
-    }
 
-    fun predict(input: String) : Int{
-        var processed = input
-        for (preprocessor in preprocessors) {
-            processed = preprocessor.process(processed)
+        FileOutputStream("target/model.ser").use { fos ->
+            ObjectOutputStream(fos).use { oos ->
+                oos.writeObject(bayesianClassifier)
+            }
         }
-        val ngramed = ngram.analyze(processed)
-        return bayesianClassifier.predict(ngramed)
     }
 }

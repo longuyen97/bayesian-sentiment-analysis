@@ -10,11 +10,17 @@ Since the algorithm is stochastic, the result may vary. Following settings are u
 - Naive white space tokenizer (The model's performance can be much better with a sophisticated tokenizer like one of Lucene)
 - Lower case text
 - 1-Gram model
-- 75% training data, 25% testing data
+- 75% training data, 25% testing data. All data splits are balanced, that means the amount of positive tweets is the same as the amount of negative tweets. 
 
 Improvement suggestion:
 - Using a better tokenizer like [Lucene Analyzer](https://www.baeldung.com/lucene-analyzers).
 - Incorperate [Term frequency–inverse document frequency](https://en.wikipedia.org/wiki/Tf%E2%80%93idf) to weight each token importance.
+
+A typical tweet could look like following:
+
+`
+@switchfoot http://twitpic.com/2y1zl - Awww, that's a bummer.  You shoulda got David Carr of Third Day to do it. ;D
+`
 
 #### Naive Bayes on unprocessed data.
 - Training: 0.84 Accuracy
@@ -32,27 +38,8 @@ Improvement suggestion:
 - Training: 0.81 Accuracy
 - Testing: 0.78 Accuracy
 
-### Motivation
 
-Sentiment analysis is the automated process of analyzing text data and sorting it into sentiments positive, negative (or neutral). Using sentiment analysis tools to analyze opinions on Twitter data can help companies understand how people are talking about their brand.
-
-The objective and challenges of sentiment analysis can be shown through some simple examples.
-
-Simple cases: 
-- Coronet has the best lines of all day cruisers.
-- Bertram has a deep V hull and runs easily through seas.
-- Pastel-colored 1980s day cruisers from Florida are ugly.
-- I dislike old cabin cruisers.
-
-More challenging examples
-- I do not dislike cabin cruisers. (Negation handling).
-- Disliking watercraft is not really my thing. (Negation, inverted word order).
-- Sometimes I really hate RIBs. (Adverbial modifies the sentiment).
-- I'd really truly love going out in this weather! (Possibly sarcastic).
-
-### Basis
-
-#### Current state of the art
+### Current state of the art
 
 The current state of the art including neural network models like [Bert](https://github.com/google-research/bert), [Transformers](https://github.com/huggingface/transformers)
 or [GPT-3](https://en.wikipedia.org/wiki/GPT-3) do a great work on NLP. However, those models lack expandability, where engineers (if at all) are rarely able to 
@@ -61,7 +48,7 @@ tell how a model comes to it decision.
 Naive Bayes on the other side may produce less accurate results, but the working principle of this model is very simple. You pump the data into its memory
 and each unseen data will be classified by using prior knowledge (this is also the heart of the Bayes theorem).
 
-#### Bayes theorem
+### Bayes theorem
 
 To apply Bayes' rule to problems, here is the general equation:
 
@@ -156,7 +143,6 @@ An overview of the dataset. Only the first and fifth column will be used for tra
 "0","1467811795","Mon Apr 06 22:20:05 PDT 2009","NO_QUERY","2Hood4Hollywood","@Tatiana_K nope they didn't have it "
 "0","1467812025","Mon Apr 06 22:20:09 PDT 2009","NO_QUERY","mimismo","@twittera que me muera ? "
 ```
-
 
 ### References
 - [Naive Bayes classifier](https://en.wikipedia.org/wiki/Naive_Bayes_classifier#Probabilistic_model)

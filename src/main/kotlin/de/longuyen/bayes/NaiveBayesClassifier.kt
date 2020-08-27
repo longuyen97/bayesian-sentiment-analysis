@@ -7,7 +7,7 @@ import java.util.stream.IntStream
 import kotlin.math.ln
 import java.io.Serializable
 
-class NaiveBayesClassifier<F, T>(private val alpha: Double = 0.5) : BayesianClassifier<F, T> , Serializable {
+open class NaiveBayesClassifier<F, T>(private val alpha: Double = 0.5) : BayesianClassifier<F, T> , Serializable {
     companion object {
         private const val serialVersionUID: Long = -4270053884763734247
     }
@@ -24,17 +24,18 @@ class NaiveBayesClassifier<F, T>(private val alpha: Double = 0.5) : BayesianClas
     // How many features does a class has
     val tFCount = ConcurrentHashMap<T, Int>()
 
-    // How many documents there are
-    var dSum = 0L
+    // How many features does a class has
+    val counts = ConcurrentHashMap<String, Long>()
 
-    // How many features
-    var fSum = 0L
+    init {
+        counts["fSum"] = 0L
+        counts["dSum"] = 0L
+    }
 
     override fun initialize(documents: Array<Array<F>>, targets: Array<T>) {
         if (documents.size != targets.size) {
             throw IllegalArgumentException("Size of features ${documents.size} is not the same of targets ${targets.size}")
         } else {
-            this.clear(documents)
             Arrays.stream(targets).parallel().forEach { target ->
                 // Increment count of a target
                 if (tCount.containsKey(target)) {
@@ -78,8 +79,9 @@ class NaiveBayesClassifier<F, T>(private val alpha: Double = 0.5) : BayesianClas
                     tFCount[label] = tFCount[label]!! + 1
 
                     // How how many features there are generally
-                    fSum += 1L
+                    counts["fSum"] = counts["fSum"]!! + 1
                 }
+                counts["dSum"] = counts["dSum"]!! + 1
             }
         }
     }
@@ -105,7 +107,7 @@ class NaiveBayesClassifier<F, T>(private val alpha: Double = 0.5) : BayesianClas
         val p = mutableListOf<Double>()
 
         for (t in targets) {
-            val pT = ln((tCount.getOrDefault(t, 0).toDouble() + alpha) / dSum.toDouble())
+            val pT = ln((tCount.getOrDefault(t, 0).toDouble() + alpha) / counts["dSum"]!!.toDouble())
 
             var sumWjCi = 0.0
             for (wj in document) {
@@ -115,7 +117,7 @@ class NaiveBayesClassifier<F, T>(private val alpha: Double = 0.5) : BayesianClas
 
             var sumWj = 0.0
             for (wj in document) {
-                sumWj += ln(fCount.getOrDefault(wj, alpha).toDouble() / fSum)
+                sumWj += ln(fCount.getOrDefault(wj, alpha).toDouble() / counts["dSum"]!!)
             }
 
             p.add(pT + sumWjCi - sumWj)
@@ -130,14 +132,5 @@ class NaiveBayesClassifier<F, T>(private val alpha: Double = 0.5) : BayesianClas
             }
         }
         return targets[argMax]
-    }
-
-    private fun clear(documents: Array<Array<F>>) {
-        dSum = documents.size.toLong()
-        fSum = 0L
-        fTCount.clear()
-        tCount.clear()
-        fCount.clear()
-        tFCount.clear()
     }
 }

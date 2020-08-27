@@ -14,7 +14,10 @@ class Pipeline(private val bayesianClassifier: BayesianClassifier<String, Int>) 
     private val io = IO()
     private val preprocessors = mutableListOf(
             LowerCase(),
+            RemoveHashtag(),
             RemoveSpecialCharacter(),
+            RemoveMention(),
+            RemoveLink(),
             RemoveStopWords()
     )
     private val ngram = NGram(1)

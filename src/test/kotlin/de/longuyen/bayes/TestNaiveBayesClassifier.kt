@@ -44,8 +44,8 @@ class TestNaiveBayesClassifier{
         assertEquals(c.tFCount[0], 8)
         assertEquals(c.tFCount[1], 6)
 
-        assertEquals(c.dSum, 4)
-        assertEquals(c.fSum, 14)
+        assertEquals(c.counts["dSum"]!!, 4)
+        assertEquals(c.counts["fSum"]!!, 14)
 
         assertEquals(c.predict(arrayOf("I", "do not", "like", "painting")), 0)
         assertEquals(c.predict(arrayOf("I", "do", "like", "painting")), 1)

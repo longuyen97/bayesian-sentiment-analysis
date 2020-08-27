@@ -4,23 +4,34 @@ This is a natural language processing project with the goal to analyze Twitter u
 
 The tweets themselves are un-preprocessed features and are therefore not suitable for producing "state of the arts" results with 99% accuracy. The challenge of this project is to implement a correctly working Naive Bayes for any kind of data and arbitrary many distinct labels, i.e. generic library for data mining.  
 
-### Result
-
 Since the algorithm is stochastic, the result may vary. Following settings are used:
 - Naive white space tokenizer (The model's performance can be much better with a sophisticated tokenizer like one of Lucene)
-- Lower case text
-- 1-Gram model
+- Lower case text. So weird capitalization of users won't play a major role.
+- 1-Gram model. From `"I like Tesla"` we will get `["I", "like", "Tesla"]`. A 1-Gram model will for example result the feature vector `["I_like", "like_Tesla"]`.
+- Remove english stop words. Words like "I", "that", "he", "she" do not provide very much entropy and can be safely removed.
 - 75% training data, 25% testing data. All data splits are balanced, that means the amount of positive tweets is the same as the amount of negative tweets. 
 
 Improvement suggestion:
 - Using a better tokenizer like [Lucene Analyzer](https://www.baeldung.com/lucene-analyzers).
 - Incorperate [Term frequency–inverse document frequency](https://en.wikipedia.org/wiki/Tf%E2%80%93idf) to weight each token importance.
 
+### Implementation
+
+#### Data overview
+
 A typical tweet could look like following:
 
 `
 @switchfoot http://twitpic.com/2y1zl - Awww, that's a bummer.  You shoulda got David Carr of Third Day to do it. ;D
 `
+
+In this case, the tweet could be seen as very dirty. The username `@switchfoot`, the hyperlink to the image of the tweet and the grammar of the tweet makes a model very difficult to learn from the data. Splitting the tweet with a naive tokenizer will result the following feature vector
+
+`
+["@switchfoot", "http://twitpic.com/2y1zl", "-", "Awww,", "that's", "a", "bummer".  You shoulda got David Carr of Third Day to do it. ;D]
+`
+
+### Result
 
 #### Naive Bayes on unprocessed data.
 - Training: 0.84 Accuracy
@@ -122,26 +133,6 @@ we can do it better by
 
 ```
 P(Wj | Ci) = (Wj count in Ci + alpha) / (Count of words in Ci + alpha * length of D)
-```
- 
-
-### Implementation
-
-#### Dataset overview
-
-An overview of the dataset. Only the first and fifth column will be used for training and classification.
-
-```csv
-"0","1467810369","Mon Apr 06 22:19:45 PDT 2009","NO_QUERY","_TheSpecialOne_","@switchfoot http://twitpic.com/2y1zl - Awww, that's a bummer.  You shoulda got David Carr of Third Day to do it. ;D"
-"0","1467810672","Mon Apr 06 22:19:49 PDT 2009","NO_QUERY","scotthamilton","is upset that he can't update his Facebook by texting it... and might cry as a result  School today also. Blah!"
-"0","1467810917","Mon Apr 06 22:19:53 PDT 2009","NO_QUERY","mattycus","@Kenichan I dived many times for the ball. Managed to save 50%  The rest go out of bounds"
-"0","1467811184","Mon Apr 06 22:19:57 PDT 2009","NO_QUERY","ElleCTF","my whole body feels itchy and like its on fire "
-"0","1467811193","Mon Apr 06 22:19:57 PDT 2009","NO_QUERY","Karoli","@nationwideclass no, it's not behaving at all. i'm mad. why am i here? because I can't see you all over there. "
-"0","1467811372","Mon Apr 06 22:20:00 PDT 2009","NO_QUERY","joy_wolf","@Kwesidei not the whole crew "
-"0","1467811592","Mon Apr 06 22:20:03 PDT 2009","NO_QUERY","mybirch","Need a hug "
-"0","1467811594","Mon Apr 06 22:20:03 PDT 2009","NO_QUERY","coZZ","@LOLTrish hey  long time no see! Yes.. Rains a bit ,only a bit  LOL , I'm fine thanks , how's you ?"
-"0","1467811795","Mon Apr 06 22:20:05 PDT 2009","NO_QUERY","2Hood4Hollywood","@Tatiana_K nope they didn't have it "
-"0","1467812025","Mon Apr 06 22:20:09 PDT 2009","NO_QUERY","mimismo","@twittera que me muera ? "
 ```
 
 ### References

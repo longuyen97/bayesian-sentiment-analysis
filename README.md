@@ -1,4 +1,4 @@
-# Bayesian sentiment analysis
+### Bayesian sentiment analysis
 
 This is a natural language processing project with the goal to analyze Twitter users' sentiment, predicting solely through user's tweet content the sentiment of the target person. The data for this analysis and sentiment prediction comes the Gabriel dataset with 1.6 million labeled tweets. 
 
@@ -15,6 +15,8 @@ Since the algorithm is stochastic, the result may vary. Following settings were 
 Improvement suggestion:
 - Using a better tokenizer like [Lucene Analyzer](https://www.baeldung.com/lucene-analyzers).
 - Incorperate [Term frequency–inverse document frequency](https://en.wikipedia.org/wiki/Tf%E2%80%93idf) to weight each token importance.
+
+---
 
 ### Implementation
 
@@ -36,9 +38,13 @@ Applying the Bayes Theorem on the data will result a pragmatic sentiment analysi
 Naive Bayes on the other side may produce less accurate results, but the working principle of this model is very simple. You pump the data into its memory
 and each unseen data will be classified by using prior knowledge (this is also the heart of the Bayes theorem). 
 
+---
+
 #### About Kotlin
 
 This project was implemented with Kotlin, a language which combines the best from Python, JavaScript and Java, utilize the best features from each language and result the almost-perfect language. At the moment I am really having fun creating stuff in KotLin and hope for more dominance coming from this language.
+
+---
 
 ### Result of the implementation
 
@@ -58,7 +64,9 @@ This project was implemented with Kotlin, a language which combines the best fro
 - Training: 0.81 Accuracy
 - Testing: 0.78 Accuracy
 
-### Bayes theorem
+---
+
+### Some theory about Bayes theorem and how it can be applied and implemented on document classification
 
 To apply Bayes' rule to problems, here is the general equation:
 
@@ -133,6 +141,8 @@ we can do it better by
 ```
 P(Wj | Ci) = (Wj count in Ci + alpha) / (Count of words in Ci + alpha * length of D)
 ```
+
+---
 
 ### References
 - [Naive Bayes classifier](https://en.wikipedia.org/wiki/Naive_Bayes_classifier#Probabilistic_model)

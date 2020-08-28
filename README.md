@@ -48,19 +48,19 @@ This project was implemented with Kotlin, a language which combines the best fro
 
 ### Result of the implementation
 
-#### Naive Bayes on unprocessed data.
+##### Naive Bayes on unprocessed data.
 - Training: 0.84 Accuracy
 - Testing: 0.76 Accuracy
 
-#### Naive Bayes on all lower case. Terms like "Love" or "love" would therefore be the same.
+##### Naive Bayes on all lower case. Terms like "Love" or "love" would therefore be the same.
 - Training: 0.85 Accuracy
 - Testing: 0.77 Accuracy
 
-#### Word Lemma. Terms like "Love", "Like", "Hate", "Dislike" would therefore be the same.
+##### Word Lemma. Terms like "Love", "Like", "Hate", "Dislike" would therefore be the same.
 - Training: 0.89 Accuracy
 - Testing: 0.82 Accuracy
 
-#### Random Forrest (3 trees). Combining wisdom of the crowd with Naive Bayes. The major vote out of three models will be the final prediction. The three models themselves were trained with different data.
+##### Random Forrest (3 trees). Combining wisdom of the crowd with Naive Bayes. The major vote out of three models will be the final prediction. The three models themselves were trained with different data.
 - Training: 0.81 Accuracy
 - Testing: 0.78 Accuracy
 
@@ -77,7 +77,7 @@ P(A|B) = (P(A) * P(B | A)) / P(B)
 where `A` is a hypothesis and `B` is data. `P(A | B)` is a conditional probability, meaning the probability that hypothesis `A` is true 
 given seen `B` data. 
 
-#### Naive Bayes 
+##### Naive Bayes 
 
 The Bayes theorem can be used in general form applied on text documents. Assuming a corpus of text documents can be used for training 
 the model where each document `D` consists of words `Wj`. Each of the document will be labeled to belong to a class `Ci`. We 

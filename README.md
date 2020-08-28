@@ -1,4 +1,4 @@
-### Bayesian sentiment analysis
+## Bayesian sentiment analysis
 
 This is a natural language processing project with the goal to analyze Twitter users' sentiment, predicting solely through user's tweet content the sentiment of the target person. The data for this analysis and sentiment prediction comes the Gabriel dataset with 1.6 million labeled tweets. 
 
@@ -18,7 +18,7 @@ Improvement suggestion:
 
 ---
 
-### Some shallow details 
+## Some shallow details 
 
 ##### Data overview
 
@@ -49,7 +49,7 @@ This project was implemented with Kotlin, a language which combines the best fro
 
 ---
 
-### Result of the implementation
+## Result of the implementation
 
 ##### Naive Bayes on unprocessed data.
 - Training: 0.84 Accuracy
@@ -69,7 +69,7 @@ This project was implemented with Kotlin, a language which combines the best fro
 
 ---
 
-### Some theory about Bayes theorem and how it can be applied and implemented on document classification
+## Some theory about Bayes theorem and how it can be applied and implemented on document classification
 
 To apply Bayes' rule to problems, here is the general equation:
 
@@ -112,6 +112,8 @@ and
 P(positive | D) = (P(positive) * product(P(Wj | positive))) / product(P(Wj))
 ```
 
+###### Log likelihood for better numerical handling
+
 To avoid a numerical underflow from many multiplications, taking the logarithm each probability helps without changing the result of the 
 maximum likelihood estimator.
 
@@ -129,6 +131,8 @@ and
 ln(P(positive | D)) 
 = ln(P(positive)) + sum(ln(P(Wj | positive))) - sum(ln(P(Wj)))
 ```
+
+##### Dealing with unknown words
 
 One final note for implementation details, calculating `P(Wj | Ci)` would be a simple division of how often `Wj` appears in 
 every document of `Ci` and how many words `Ci` has overall. Since the equation involves probabilities of each word of a new sentence with 

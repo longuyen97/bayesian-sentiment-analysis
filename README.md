@@ -112,7 +112,7 @@ and
 P(positive | D) = (P(positive) * product(P(Wj | positive))) / product(P(Wj))
 ```
 
-###### Log likelihood for better numerical handling
+##### Log likelihood for better numerical handling
 
 To avoid a numerical underflow from many multiplications, taking the logarithm each probability helps without changing the result of the 
 maximum likelihood estimator.

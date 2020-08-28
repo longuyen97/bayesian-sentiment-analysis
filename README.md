@@ -18,9 +18,9 @@ Improvement suggestion:
 
 ---
 
-### Implementation
+### Some shallow details 
 
-#### Data overview
+##### Data overview
 
 A typical tweet could look like following:
 
@@ -33,6 +33,9 @@ In this case, the tweet could be seen as very dirty. The username `@switchfoot`,
 `
 ["@switchfoot", "http://twitpic.com/2y1zl", "-", "Awww,", "that's", "a", "bummer.", "You", "shoulda", "got", "David", "Carr", "of", "Third", "Day", "to", "do", "it.", ";D"]
 `
+
+##### Why Naive Bayes for classification?
+
 Applying the Bayes Theorem on the data will result a pragmatic sentiment analysis model with a pretty high accuracy and very high explainability, which could be a deal breaker when using models like [Bert](https://github.com/google-research/bert), [Transformers](https://github.com/huggingface/transformers) or [GPT-3](https://en.wikipedia.org/wiki/GPT-3).
 
 Naive Bayes on the other side may produce less accurate results, but the working principle of this model is very simple. You pump the data into its memory
@@ -40,7 +43,7 @@ and each unseen data will be classified by using prior knowledge (this is also t
 
 ---
 
-#### About Kotlin
+##### Why Kotlin?
 
 This project was implemented with Kotlin, a language which combines the best from Python, JavaScript and Java, utilize the best features from each language and result the almost-perfect language. At the moment I am really having fun creating stuff in KotLin and hope for more dominance coming from this language.
 

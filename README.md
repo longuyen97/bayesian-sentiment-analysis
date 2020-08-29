@@ -1,6 +1,6 @@
 ## Bayesian sentiment analysis
 
-<img src="data/header.png" width=500px/>
+<img src="data/header.png" width="1000px"/>
 
 This is a natural language processing project with the goal to employ Bayes Theorem to classify text documents. The focus of 
 this machine learning model is speed, explainability and portability (implementable in every programming language without extra effort).

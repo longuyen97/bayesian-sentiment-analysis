@@ -1,4 +1,4 @@
-package de.longuyen.nlp
+package de.longuyen.metrics
 
 class Accuracy<T> : Metrics<T> {
     override fun compute(a: Array<T>, b: Array<T>) : Double {

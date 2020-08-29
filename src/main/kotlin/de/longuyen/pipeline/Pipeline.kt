@@ -1,7 +1,13 @@
-package de.longuyen
+package de.longuyen.pipeline
 
 import de.longuyen.bayes.BayesianClassifier
-import de.longuyen.nlp.*
+import de.longuyen.data.IO
+import de.longuyen.metrics.Accuracy
+import de.longuyen.nlp.Preprocessor
+import org.apache.lucene.analysis.Analyzer
+import org.apache.lucene.analysis.TokenStream
+import org.apache.lucene.analysis.custom.CustomAnalyzer
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute
 import java.io.FileOutputStream
 import java.io.ObjectOutputStream
 import java.io.Serializable
@@ -9,23 +15,37 @@ import java.util.*
 import java.util.stream.IntStream
 
 
-class Pipeline(private val bayesianClassifier: BayesianClassifier<String, Int>) : Serializable {
+fun analyze(text: String): Array<String> {
+    val analyzer: Analyzer = CustomAnalyzer.builder()
+        .withTokenizer("standard")
+        .addTokenFilter("lowercase")
+        .addTokenFilter("stop")
+        .addTokenFilter("porterstem")
+        .build()
+    val result: MutableList<String> = ArrayList()
+    val tokenStream: TokenStream = analyzer.tokenStream("test", text)
+    val attr: CharTermAttribute = tokenStream.addAttribute(CharTermAttribute::class.java)
+    tokenStream.reset()
+    while (tokenStream.incrementToken()) {
+        result.add(attr.toString())
+    }
+    return result.toTypedArray()
+}
+
+class Pipeline(private val io: IO, private val bayesianClassifier: BayesianClassifier<String, String>) : Serializable {
     companion object {
         private const val serialVersionUID: Long = -4270053884763734247
     }
 
-    private val io = IO()
-    private val preprocessors = mutableListOf(
-            LowerCase()
+    private val preprocessors = mutableListOf<Preprocessor>(
     )
-    private val ngram = NGram(1)
-    private val metric = Accuracy<Int>()
+    private val metric = Accuracy<String>()
 
     fun train() {
         var start = System.currentTimeMillis()
         val input = io.read()
         val features: MutableList<String> = input.first.toMutableList()
-        val targets: MutableList<Int> = input.second.toMutableList()
+        val targets: MutableList<String> = input.second.toMutableList()
         println("Reading data took ${System.currentTimeMillis() - start}ms")
 
         start = System.currentTimeMillis()
@@ -36,37 +56,27 @@ class Pipeline(private val bayesianClassifier: BayesianClassifier<String, Int>) 
         }
         println("Preprocessing data took ${System.currentTimeMillis() - start}ms")
 
-        start = System.currentTimeMillis()
-        val xFiltered = mutableListOf<String>()
-        val yFiltered= mutableListOf<Int>()
-        IntStream.range(0, features.size).forEach {
-            if(features[it].trim().split(this.ngram.delimiter).size >=  this.ngram.n){
-                xFiltered.add(features[it])
-                yFiltered.add(targets[it])
-            }
-        }
-        println("Filtering data took ${System.currentTimeMillis() - start}ms")
 
         start = System.currentTimeMillis()
-        val nGramFeatures = Array(xFiltered.size){ arrayOf<String>()}
-        IntStream.range(0, xFiltered.size).parallel().forEach {
-            nGramFeatures[it] = ngram.analyze(xFiltered[it])
+        val tokens = Array(features.size){ arrayOf<String>()}
+        IntStream.range(0, features.size).parallel().forEach {
+            tokens[it] = analyze(features[it])
         }
-        println("Transforming data into NGram took ${System.currentTimeMillis() - start}ms")
+        println("Tokenizing data took ${System.currentTimeMillis() - start}ms")
 
         val trainSize = 75
         val X = mutableListOf<Array<String>>()
-        val Y = mutableListOf<Int>()
+        val Y = mutableListOf<String>()
         val x = mutableListOf<Array<String>>()
-        val y = mutableListOf<Int>()
+        val y = mutableListOf<String>()
         val random = Random(42)
-        for(i in nGramFeatures.indices){
+        for(i in tokens.indices){
             if(random.nextInt(100) < trainSize){
-                X.add(nGramFeatures[i])
-                Y.add(yFiltered[i])
+                X.add(tokens[i])
+                Y.add(targets[i])
             }else{
-                x.add(nGramFeatures[i])
-                y.add(yFiltered[i])
+                x.add(tokens[i])
+                y.add(targets[i])
             }
         }
         println("Finishing splitting data. Training data has ${X.size} items. Testing data has ${x.size} items")

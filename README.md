@@ -5,7 +5,7 @@ This is a natural language processing project with the goal to employ Bayes Theo
 Since the algorithm is stochastic, the result may vary. Following settings were tested and used on processing data:
 - Lucene's standard Tokenizer .
 - Lower case text. So weird capitalization of users won't play a major role.
-- 1-Gram model. From `"I like Tesla"` we will get `["I", "like", "Tesla"]`. A 2-Gram model will for example result the feature vector `["I_like", "like_Tesla"]`.
+- 2-Gram model. From `"I like Tesla"` we will get `["I", "like", "Tesla", "I_like", "like_Tesla"]`.
 - Remove english stop words. Words like `"I", "that", "he", "she"` do not provide very much entropy and can be safely removed.
 - 75% training data, 25% testing data. All data splits are balanced, that means the amount of positive tweets is the same as the amount of negative tweets. 
 
@@ -25,9 +25,17 @@ and each unseen data will be classified by using prior knowledge (this is also t
 
 ## Results of the models on multiple datasets
 
+Following are some of my experiments on diverse datasets.
+
 ##### Spamming Dataset
 - Training: 0.97 Accuracy
 - Testing: 0.96 Accuracy
+
+---
+
+##### Movie rating Dataset
+- Training: 0.89 Accuracy
+- Testing: 0.85 Accuracy
 
 ---
 

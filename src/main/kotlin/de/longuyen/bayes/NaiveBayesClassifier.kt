@@ -84,6 +84,11 @@ open class NaiveBayesClassifier<F, T>(private val alpha: Double = 0.9) : Bayesia
                 counts["dSum"] = counts["dSum"]!! + 1
             }
         }
+
+        println("Label distribution:")
+        for(t in tCount.keys()){
+            println("$t : ${tCount[t]}")
+        }
     }
 
 

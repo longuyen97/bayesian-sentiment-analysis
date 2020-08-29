@@ -1,6 +1,6 @@
 package de.longuyen.pipeline
 
-import de.longuyen.analyze
+import de.longuyen.Tokenizer
 import de.longuyen.bayes.BayesianClassifier
 import de.longuyen.data.IO
 import de.longuyen.metrics.Metrics
@@ -13,9 +13,11 @@ import java.util.stream.IntStream
 
 class Pipeline(private val io: IO,
                private val preprocessors: List<Preprocessor>,
+               private val tokenizer: Tokenizer,
                private val bayesianClassifier: BayesianClassifier<String, String>,
                private val metrics: List<Metrics<String>>,
                private val trainSize: Int = 90) : Serializable {
+
     companion object {
         private const val serialVersionUID: Long = -4270053884763734247
     }
@@ -39,7 +41,7 @@ class Pipeline(private val io: IO,
         start = System.currentTimeMillis()
         val tokens = Array(features.size){ arrayOf<String>()}
         IntStream.range(0, features.size).parallel().forEach {
-            tokens[it] = analyze(features[it])
+            tokens[it] = tokenizer.analyze(features[it])
         }
         println("Tokenizing data took ${System.currentTimeMillis() - start}ms")
         val X = mutableListOf<Array<String>>()

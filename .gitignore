@@ -65,3 +65,5 @@ buildNumber.properties
 *.iml
 !data/tweets.zip
 data/tweets.csv
+data/imdb.csv
+!data/imdb.zip

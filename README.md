@@ -1,14 +1,12 @@
-## Bayesian sentiment analysis
+<h1 align="center">Bayesian sentiment analysis</h1>
 
 <img src="data/header.png" width="1000px"/>
 
 This is a natural language processing project with the goal to employ Bayes Theorem to classify text documents. The focus of 
-this machine learning model is speed, explainability and portability (implementable in every programming language without extra effort).
+the machine learning model is speed, explainability and portability (implementable in every programming language without extra effort).
 
-The algorithm was used primarily on text document. But the implementation was made generic and can be used for almost every kind
-of training data.
-
-Since the algorithm is stochastic, the result may vary. Following settings were tested:
+The algorithm would be used primarily on text document. But the implementation was made generic and can be used for almost every kind
+of training data. Since the algorithm is stochastic, the result may vary. Following processing steps were tested:
 
 - [Lucene](https://github.com/apache/lucene-solr)'s standard Tokenizer with Porter Stemming, removing stop words, removing HTML tags, lower case texts.
 - 2-Gram model. From `"I like Tesla"` we will get `["I", "like", "Tesla", "I_like", "like_Tesla"]`. This step can sometimes improve the 

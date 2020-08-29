@@ -1,13 +1,17 @@
 ## Bayesian sentiment analysis
 
-This is a natural language processing project with the goal to employ Bayes Theorem to classify text documents.
+This is a natural language processing project with the goal to employ Bayes Theorem to classify text documents. The focus of 
+this machine learning model is speed, explainability and portability (implementable in every programming language without extra effort).
 
-Since the algorithm is stochastic, the result may vary. Following settings were tested and used on processing data:
-- Lucene's standard Tokenizer .
-- Lower case text. So weird capitalization of users won't play a major role.
-- 2-Gram model. From `"I like Tesla"` we will get `["I", "like", "Tesla", "I_like", "like_Tesla"]`.
-- Remove english stop words. Words like `"I", "that", "he", "she"` do not provide very much entropy and can be safely removed.
-- 75% training data, 25% testing data. All data splits are balanced, that means the amount of positive tweets is the same as the amount of negative tweets. 
+The algorithm was used primarily on  
+
+Since the algorithm is stochastic, the result may vary. Following settings were tested:
+- [Lucene](https://github.com/apache/lucene-solr)'s standard Tokenizer with Porter Stemming, removing stop words, removing HTML tags, lower case texts.
+- 2-Gram model. From `"I like Tesla"` we will get `["I", "like", "Tesla", "I_like", "like_Tesla"]`. This step can sometimes improve the 
+performance hugely since bayesian inference ignores completely that order of words, which however can very important for the 
+linguistic understanding of a text document.
+- Removing HTML tags with [JSoup](https://github.com/jhy/jsoup)
+- 75% training data, 25% testing data. All data splits are balanced, the labels are equally distributed to avoid bias. 
 
 Improvement suggestion:
 - Incorperate [Term frequency–inverse document frequency](https://en.wikipedia.org/wiki/Tf%E2%80%93idf) to weight each token importance.
@@ -97,9 +101,6 @@ The final formula would look like following.
 
 ```
 ln(P(negative | D)) 
-= ln((P(negative) * product(P(Wj | negative))) / product(P(Wj)))
-= ln((P(negative) * product(P(Wj | negative)))) - ln(product(P(Wj))))
-= ln((P(negative) * product(P(Wj | negative)))) - ln(product(P(Wj))))
 = ln(P(negative)) + sum(ln(P(Wj | negative))) - sum(ln(P(Wj)))
 
 and 

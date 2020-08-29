@@ -1,40 +1,20 @@
 ## Bayesian sentiment analysis
 
-This is a natural language processing project with the goal to analyze Twitter users' sentiment, predicting solely through user's tweet content the sentiment of the target person. The data for this analysis and sentiment prediction comes the Gabriel dataset with 1.6 million labeled tweets. 
-
-The data themselves are raw un-preprocessed Tweets and are therefore not suitable for producing "state of the arts" results with 99% accuracy. The challenge of this project is to implement a correctly working Naive Bayes for any kind of data and arbitrary many distinct labels, i.e. generic library for data mining.  
+This is a natural language processing project with the goal to employ Bayes Theorem to classify text documents.
 
 Since the algorithm is stochastic, the result may vary. Following settings were tested and used on processing data:
-- Naive white space tokenizer (The model's performance can be much better with a sophisticated tokenizer like one of Lucene).
+- Lucene's standard Tokenizer .
 - Lower case text. So weird capitalization of users won't play a major role.
 - 1-Gram model. From `"I like Tesla"` we will get `["I", "like", "Tesla"]`. A 2-Gram model will for example result the feature vector `["I_like", "like_Tesla"]`.
 - Remove english stop words. Words like `"I", "that", "he", "she"` do not provide very much entropy and can be safely removed.
 - 75% training data, 25% testing data. All data splits are balanced, that means the amount of positive tweets is the same as the amount of negative tweets. 
-- Lemmatization with [NLP Stanford](https://nlp.stanford.edu/) yields a very long processing time but a promising result. Since the lemmatization only takes very much time in training time, the model's performance would still be fast in production.
 
 Improvement suggestion:
-- Using a better tokenizer like [Lucene Analyzer](https://www.baeldung.com/lucene-analyzers).
 - Incorperate [Term frequency–inverse document frequency](https://en.wikipedia.org/wiki/Tf%E2%80%93idf) to weight each token importance.
 
 ---
 
-## Some shallow details 
-
-##### Data overview
-
-A typical tweet could look like following:
-
-`
-@switchfoot http://twitpic.com/2y1zl - Awww, that's a bummer.  You shoulda got David Carr of Third Day to do it. ;D
-`
-
-In this case, the tweet could be seen as very dirty. The username `@switchfoot`, the hyperlink to the image of the tweet and the grammar of the tweet makes a model very difficult to learn from the data. Splitting the tweet with a naive tokenizer will result the following feature vector
-
-`
-["@switchfoot", "http://twitpic.com/2y1zl", "-", "Awww,", "that's", "a", "bummer.", "You", "shoulda", "got", "David", "Carr", "of", "Third", "Day", "to", "do", "it.", ";D"]
-`
-
-##### Why Naive Bayes for classification?
+## Why Naive Bayes for classification?
 
 Applying the Bayes Theorem on the data will result a pragmatic sentiment analysis model with a pretty high accuracy and very high explainability, which could be a deal breaker when using models like [Bert](https://github.com/google-research/bert), [Transformers](https://github.com/huggingface/transformers) or [GPT-3](https://en.wikipedia.org/wiki/GPT-3).
 
@@ -43,29 +23,15 @@ and each unseen data will be classified by using prior knowledge (this is also t
 
 ---
 
-##### Why Kotlin?
-
-This project was implemented with Kotlin, a language which combines the best from Python, JavaScript and Java, utilize the best features from each language and result the almost-perfect language. At the moment I am really having fun creating stuff in KotLin and hope for more dominance coming from this language.
+##### Spamming Dataset
+- Training: 0.97 Accuracy
+- Testing: 0.96 Accuracy
 
 ---
 
-## Result of the implementation
-
-##### Naive Bayes on unprocessed data.
-- Training: 0.84 Accuracy
-- Testing: 0.76 Accuracy
-
-##### Naive Bayes on all lower case. Terms like "Love" or "love" would therefore be the same.
-- Training: 0.85 Accuracy
-- Testing: 0.77 Accuracy
-
-##### Word Lemma. Terms like "Love", "Like", "Hate", "Dislike" would therefore be the same.
-- Training: 0.89 Accuracy
-- Testing: 0.82 Accuracy
-
-##### Random Forrest (3 trees). Combining wisdom of the crowd with Naive Bayes. The major vote out of three models will be the final prediction. The three models themselves were trained with different data.
-- Training: 0.81 Accuracy
-- Testing: 0.78 Accuracy
+##### Twitter Dataset
+- Training: 0.91 Accuracy
+- Testing: 0.80 Accuracy
 
 ---
 
@@ -148,6 +114,12 @@ we can do it better by
 ```
 P(Wj | Ci) = (Wj count in Ci + alpha) / (Count of words in Ci + alpha * length of D)
 ```
+
+---
+
+##### Why Kotlin?
+
+This project was implemented with Kotlin, a language which combines the best from Python, JavaScript and Java, utilize the best features from each language and result the almost-perfect language. At the moment I am really having fun creating stuff in KotLin and hope for more dominance coming from this language.
 
 ---
 

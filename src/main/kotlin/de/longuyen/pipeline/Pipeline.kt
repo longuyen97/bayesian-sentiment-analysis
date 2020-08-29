@@ -1,45 +1,24 @@
 package de.longuyen.pipeline
 
+import de.longuyen.analyze
 import de.longuyen.bayes.BayesianClassifier
 import de.longuyen.data.IO
-import de.longuyen.metrics.Accuracy
-import de.longuyen.nlp.Preprocessor
-import org.apache.lucene.analysis.Analyzer
-import org.apache.lucene.analysis.TokenStream
-import org.apache.lucene.analysis.custom.CustomAnalyzer
-import org.apache.lucene.analysis.tokenattributes.CharTermAttribute
+import de.longuyen.metrics.Metrics
+import de.longuyen.nlp.*
 import java.io.FileOutputStream
 import java.io.ObjectOutputStream
 import java.io.Serializable
 import java.util.*
 import java.util.stream.IntStream
 
-
-fun analyze(text: String): Array<String> {
-    val analyzer: Analyzer = CustomAnalyzer.builder()
-        .withTokenizer("standard")
-        .addTokenFilter("lowercase")
-        .addTokenFilter("stop")
-        .addTokenFilter("porterstem")
-        .build()
-    val result: MutableList<String> = ArrayList()
-    val tokenStream: TokenStream = analyzer.tokenStream("test", text)
-    val attr: CharTermAttribute = tokenStream.addAttribute(CharTermAttribute::class.java)
-    tokenStream.reset()
-    while (tokenStream.incrementToken()) {
-        result.add(attr.toString())
-    }
-    return result.toTypedArray()
-}
-
-class Pipeline(private val io: IO, private val bayesianClassifier: BayesianClassifier<String, String>) : Serializable {
+class Pipeline(private val io: IO,
+               private val preprocessors: List<Preprocessor>,
+               private val bayesianClassifier: BayesianClassifier<String, String>,
+               private val metrics: List<Metrics<String>>,
+               private val trainSize: Int = 90) : Serializable {
     companion object {
         private const val serialVersionUID: Long = -4270053884763734247
     }
-
-    private val preprocessors = mutableListOf<Preprocessor>(
-    )
-    private val metric = Accuracy<String>()
 
     fun train() {
         var start = System.currentTimeMillis()
@@ -63,8 +42,6 @@ class Pipeline(private val io: IO, private val bayesianClassifier: BayesianClass
             tokens[it] = analyze(features[it])
         }
         println("Tokenizing data took ${System.currentTimeMillis() - start}ms")
-
-        val trainSize = 75
         val X = mutableListOf<Array<String>>()
         val Y = mutableListOf<String>()
         val x = mutableListOf<Array<String>>()
@@ -90,16 +67,20 @@ class Pipeline(private val io: IO, private val bayesianClassifier: BayesianClass
         println("Prediction train took ${System.currentTimeMillis() - start}ms")
 
         start = System.currentTimeMillis()
-        val metricTrain = metric.compute(Y.toTypedArray(), predictionTrain.toTypedArray())
-        println("Evaluating training prediction took ${System.currentTimeMillis() - start}ms. Accuracy $metricTrain")
+        for(metric in metrics) {
+            val metricTrain = metric.compute(Y.toTypedArray(), predictionTrain.toTypedArray())
+            println("Evaluating training prediction took ${System.currentTimeMillis() - start}ms. ${metric::class.java.simpleName} $metricTrain")
+        }
 
         start = System.currentTimeMillis()
         val predictionTest = bayesianClassifier.predict(x.toTypedArray())
         println("Prediction test took ${System.currentTimeMillis() - start}ms")
 
         start = System.currentTimeMillis()
-        val metricTest = metric.compute(y.toTypedArray(), predictionTest.toTypedArray())
-        println("Evaluating testing prediction took ${System.currentTimeMillis() - start}ms. Accuracy $metricTest")
+        for(metric in metrics) {
+            val metricTest = metric.compute(y.toTypedArray(), predictionTest.toTypedArray())
+            println("Evaluating testing prediction took ${System.currentTimeMillis() - start}ms. ${metric::class.java.simpleName} $metricTest")
+        }
 
         FileOutputStream("target/model.ser").use { fos ->
             ObjectOutputStream(fos).use { oos ->

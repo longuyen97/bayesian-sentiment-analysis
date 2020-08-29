@@ -5,7 +5,7 @@ import org.apache.commons.csv.CSVRecord
 import java.io.*
 
 
-class IO(private val input: String, private val featureColumn: Int, private val targetColumn: Int) : Serializable {
+class IO(private val dataset: Dataset) : Serializable {
     companion object {
         private const val serialVersionUID: Long = -4270053884763734247
     }
@@ -13,11 +13,11 @@ class IO(private val input: String, private val featureColumn: Int, private val 
     fun read(): Pair<Array<String>, Array<String>> {
         val features = mutableListOf<String>()
         val targets = mutableListOf<String>()
-        val fr = FileReader(input)
+        val fr = FileReader(dataset.input)
         val records: Iterable<CSVRecord> = CSVFormat.DEFAULT.parse(fr)
         for (record in records) {
-            val target = record[targetColumn]
-            val feature = record[featureColumn]
+            val target = record[dataset.target]
+            val feature = record[dataset.feature]
             features.add(feature)
             targets.add(target)
         }

@@ -3,9 +3,11 @@
 This is a natural language processing project with the goal to employ Bayes Theorem to classify text documents. The focus of 
 this machine learning model is speed, explainability and portability (implementable in every programming language without extra effort).
 
-The algorithm was used primarily on  
+The algorithm was used primarily on text document. But the implementation was made generic and can be used for almost every kind
+of training data.
 
 Since the algorithm is stochastic, the result may vary. Following settings were tested:
+
 - [Lucene](https://github.com/apache/lucene-solr)'s standard Tokenizer with Porter Stemming, removing stop words, removing HTML tags, lower case texts.
 - 2-Gram model. From `"I like Tesla"` we will get `["I", "like", "Tesla", "I_like", "like_Tesla"]`. This step can sometimes improve the 
 performance hugely since bayesian inference ignores completely that order of words, which however can very important for the 
@@ -31,19 +33,19 @@ and each unseen data will be classified by using prior knowledge (this is also t
 
 Following are some of my experiments on diverse datasets.
 
-##### Spamming Dataset
+##### [Spamming Dataset](https://www.kaggle.com/uciml/sms-spam-collection-dataset)
 - Training: 0.97 Accuracy
 - Testing: 0.96 Accuracy
 
 ---
 
-##### Movie rating Dataset
+##### [Movie rating Dataset](https://www.kaggle.com/lakshmi25npathi/imdb-dataset-of-50k-movie-reviews)
 - Training: 0.89 Accuracy
 - Testing: 0.85 Accuracy
 
 ---
 
-##### Twitter Dataset
+##### [Twitter Dataset](https://www.kaggle.com/kazanova/sentiment140)
 - Training: 0.91 Accuracy
 - Testing: 0.80 Accuracy
 

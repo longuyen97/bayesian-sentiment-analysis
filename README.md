@@ -130,7 +130,7 @@ P(Wj | Ci) = (Wj count in Ci + alpha) / (Count of words in Ci + alpha * length o
 
 ---
 
-##### Why Kotlin?
+### Why Kotlin?
 
 This project was implemented with Kotlin, a language which combines the best from Python, JavaScript and Java, utilize the best features from each language and result the almost-perfect language. At the moment I am really having fun creating stuff in KotLin and hope for more dominance coming from this language.
 
